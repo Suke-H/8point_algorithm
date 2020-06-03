@@ -20,6 +20,11 @@ def calc_Fmatrix(uv_mat):
     U, D, V = LA.svd(mat)
     # Vから固有値最小の固有ベクトルを取り出してFにする
     F = V[8].reshape((3, 3))
+
+    # これでもいけるはずだけどできない
+    # value, vec = LA.eig(np.dot(mat.T, mat))
+    # F = vec[8].reshape((3, 3))
+
     print("F=",F)
 
     # Fのランクを2にする
@@ -44,3 +49,19 @@ def calc_Fmatrix(uv_mat):
         print(np.dot(a, x1))
 
     return F
+
+def calc_epipole(F):
+    # F^Tを特異値分解
+    U, D, V = LA.svd(F.T)
+    # Vから固有値最小の固有ベクトルを取り出す
+    fvec = V[2]
+    print(fvec / fvec[2])
+
+    # こっちだとやっぱりできない
+    # value, vec = LA.eig(np.dot(F, F.T))
+    # fvec = vec[2]
+    # print(fvec / fvec[2])
+
+    return fvec / fvec[2]
+
+

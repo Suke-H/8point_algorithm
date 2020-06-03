@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -22,18 +21,18 @@ def draw_images(F, uv_mat, pic_paths):
     x2_set = np.array([[uv_mat[i, 2], uv_mat[i, 3], 1] for i in range(n)])
 
     # エピポーラ線のパラメータ
-    prams1 = np.dot(F.T, x2_set.T).T
-    prams2 = np.dot(F, x1_set.T).T
+    paras1 = np.dot(F.T, x2_set.T).T
+    paras2 = np.dot(F, x1_set.T).T
 
     # 対応点の座標をu, vに分解
     u1_set, v1_set, u2_set, v2_set = uv_mat.T
 
     # 画像1でのエピポーラ線描画
-    draw_lines(F, prams1, u1_set, v1_set, pic_paths[0])
+    draw_lines(F, paras1, u1_set, v1_set, pic_paths[0])
     # 画像2でのエピポーラ線描画
-    draw_lines(F, prams2, u2_set, v2_set, pic_paths[1])
+    draw_lines(F, paras2, u2_set, v2_set, pic_paths[1])
 
-def draw_lines(F, prams, u_set, v_set, pic_path):
+def draw_lines(F, paras, u_set, v_set, pic_path):
 
     # 画像の読み込み
     img = np.array(Image.open(pic_path))
@@ -42,7 +41,7 @@ def draw_lines(F, prams, u_set, v_set, pic_path):
     height, width, _ = img.shape
 
     # エピポーラ線を1本ずつ描画
-    for (a, b, c) in prams:
+    for (a, b, c) in paras:
 
         line = np.empty((0, 2))
 
