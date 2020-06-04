@@ -31,19 +31,19 @@ def calc_Fmatrix(uv_mat):
     value, _ = LA.eig(F)
     print("Fの固有値=", value)
 
-    # Fのランクを2にする
-    U, D, V = LA.svd(F)
-    d = np.sqrt(D[0]**2 + D[1]**2)
-    print(np.diag([D[0]/d, D[1]/d, 0]))
-    F = np.dot(U, np.diag([D[0]/d, D[1]/d, 0]))
-    F = np.dot(F, V.T)
-    print("F'=",F)
+    # Fのランクを2にする(うまく動作しない)
+    # U, D, V = LA.svd(F)
+    # d = np.sqrt(D[0]**2 + D[1]**2)
+    # print(np.diag([D[0]/d, D[1]/d, 0]))
+    # F = np.dot(U, np.diag([D[0]/d, D[1]/d, 0]))
+    # F = np.dot(F, V.T)
+    # print("F'=",F)
 
-    print("F_rank=",LA.matrix_rank(F))
+    # print("F_rank=",LA.matrix_rank(F))
 
-    # Fの固有値は[1,0,0]になる
-    value, _ = LA.eig(F)
-    print("Fの固有値=", value)
+    # # Fの固有値は[1,0,0]になる
+    # value, _ = LA.eig(F)
+    # print("Fの固有値=", value)
 
     for i in range(8):
         # x1 = [u1, u2, 1], x2 = [u2, v2, 1]
