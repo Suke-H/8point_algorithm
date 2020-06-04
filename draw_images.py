@@ -77,3 +77,4 @@ def draw_lines(F, paras, u_set, v_set, pic_path):
 
     plt.show()
     plt.close()
+    

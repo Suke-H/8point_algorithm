@@ -26,12 +26,18 @@ def calc_Fmatrix(uv_mat):
     # F = vec[8].reshape((3, 3))
 
     print("F=",F)
+    print("F_rank=",LA.matrix_rank(F))
+    # Fの固有値は[1,0,0]になる
+    value, _ = LA.eig(F)
+    print("Fの固有値=", value)
 
     # Fのランクを2にする
-    # U, D, V = LA.svd(F)
-    # F = np.dot(U, np.diag([D[0], D[1], 0]))
-    # F = np.dot(F, V.T)
-    # print("F'=",F)
+    U, D, V = LA.svd(F)
+    d = np.sqrt(D[0]**2 + D[1]**2)
+    print(np.diag([D[0]/d, D[1]/d, 0]))
+    F = np.dot(U, np.diag([D[0]/d, D[1]/d, 0]))
+    F = np.dot(F, V.T)
+    print("F'=",F)
 
     print("F_rank=",LA.matrix_rank(F))
 
@@ -52,10 +58,9 @@ def calc_Fmatrix(uv_mat):
 
 def calc_epipole(F):
     # F^Tを特異値分解
-    U, D, V = LA.svd(F.T)
+    U, D, V = LA.svd(F)
     # Vから固有値最小の固有ベクトルを取り出す
     fvec = V[2]
-    print(fvec / fvec[2])
 
     # こっちだとやっぱりできない
     # value, vec = LA.eig(np.dot(F, F.T))
