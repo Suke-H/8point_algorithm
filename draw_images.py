@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+import matplotlib.cm as cm
 
 def draw_images(F, uv_mat, pic_paths):
     """
@@ -27,12 +28,15 @@ def draw_images(F, uv_mat, pic_paths):
     # 対応点の座標をu, vに分解
     u1_set, v1_set, u2_set, v2_set = uv_mat.T
 
-    # 画像1でのエピポーラ線描画
-    draw_lines(F, paras1, u1_set, v1_set, pic_paths[0])
-    # 画像2でのエピポーラ線描画
-    draw_lines(F, paras2, u2_set, v2_set, pic_paths[1])
+    print(u1_set, v1_set, u2_set, v2_set)
 
-def draw_lines(F, paras, u_set, v_set, pic_path):
+    # 画像1でのエピポーラ線描画
+    draw_lines(paras1, u1_set, v1_set, pic_paths[0])
+    # 画像2でのエピポーラ線描画
+    draw_lines(paras2, u2_set, v2_set, pic_paths[1])
+
+def draw_lines(paras, u_set, v_set, pic_path):
+    """ 1つの画像にエピポーラ線描画 """
 
     # 画像の読み込み
     img = np.array(Image.open(pic_path))
@@ -41,7 +45,7 @@ def draw_lines(F, paras, u_set, v_set, pic_path):
     height, width, _ = img.shape
 
     # エピポーラ線を1本ずつ描画
-    for (a, b, c) in paras:
+    for i, (a, b, c) in enumerate(paras):
 
         line = np.empty((0, 2))
 
@@ -64,10 +68,14 @@ def draw_lines(F, paras, u_set, v_set, pic_path):
             line = np.append(line, np.array([[width, v2]]), axis=0)
 
         # 2点を結ぶ線分を描画
-        plt.plot(line[:, 0], line[:, 1], marker="None",color="blue")
+        plt.plot(line[:, 0], line[:, 1], marker="None",color=cm.hsv(i/len(u_set)))
+
+    data_name = [i for i in range(len(u_set))]
     
     # 対応点のプロット
-    plt.plot(u_set, v_set, marker="o",linestyle="None", color="red")   
+    for (i, j, k) in zip(u_set, v_set, data_name):
+        plt.plot(i,j,'o',color=cm.hsv(k/len(u_set)))
+        plt.annotate(str(k), xy=(i, j)) 
 
     # 画像の読み込み
     img = np.array(Image.open(pic_path))

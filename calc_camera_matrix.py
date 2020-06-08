@@ -28,8 +28,8 @@ def calc_inside_param(F, e, p11, p12, p21, p22, calc_phase="f"):
     # a1, a2を求める
     sy.var('a1, a2')
 
+    # 焦点距離f1, f2を求める
     if calc_phase == "f":
-
         A1 = sy.Matrix([[a1, 0, p11],
                         [0, a1, p12],
                         [0, 0, 1]])
@@ -38,6 +38,9 @@ def calc_inside_param(F, e, p11, p12, p21, p22, calc_phase="f"):
                         [0, a2, p22],
                         [0, 0, 1]])
 
+        a1_name, a2_name = "f1", "f2"
+
+    # 画像1の中心座標(cu1, cv1)を求める
     elif calc_phase == "c1":
         A1 = sy.Matrix([[p11, 0, a1],
                         [0, p11, a2],
@@ -47,6 +50,9 @@ def calc_inside_param(F, e, p11, p12, p21, p22, calc_phase="f"):
                         [0, p12, p22],
                         [0, 0, 1]])
 
+        a1_name, a2_name = "cu1", "cv1"
+
+    # 画像2の中心座標(cu2, cv2)を求める
     elif calc_phase == "c2":
         A1 = sy.Matrix([[p11, 0, p21],
                         [0, p11, p22],
@@ -55,6 +61,8 @@ def calc_inside_param(F, e, p11, p12, p21, p22, calc_phase="f"):
         A2 = sy.Matrix([[p12, 0, a1],
                         [0, p12, a2],
                         [0, 0, 1]])
+
+        a1_name, a2_name = "cu2", "cv2"
 
     # t
     sy.var('t')
@@ -93,6 +101,6 @@ def calc_inside_param(F, e, p11, p12, p21, p22, calc_phase="f"):
 
     # expr1 = expr2 = 0を解く(解はa1, a2)
     ans = sy.solve([expr1, expr2], [a1, a2])
-    print("(a1, a2)=\n{}".format(ans))
+    print("({}, {})=\n{}".format(a1_name, a2_name, ans))
 
     return ans
