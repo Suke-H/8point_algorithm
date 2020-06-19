@@ -2,10 +2,9 @@ import numpy as np
 import numpy.linalg as LA
 import sympy as sy
 from PIL import Image
-from calc_Fmatrix import calc_Fmatrix, calc_epipole
+from calc_Fmatrix import calc_Fmatrix, calc_epipole, calc_Fmatrix_by5points
 from draw_images import draw_images
 from calc_camera_matrix import calc_inside_param
-from fivepoint_algorithm import calc_Fmatrix_by5points
 
 def division(uv_mat):
     """
@@ -19,7 +18,9 @@ def division(uv_mat):
     plane_points15 = uv_mat[[0,1,2,3,8,9,10,15,16,17,18,19,20,21,22], :]
     points8_else = uv_mat[8:, :]
     points15_else = uv_mat[15:, :]
+
     return points8, points15, plane_points8, plane_points15, points8_else, points15_else
+
 if __name__ == '__main__':
     # getpoint.pyにより取り出した対応点を読み込み
     uv_mat = np.load("img/uv_mat1.npy")
@@ -41,7 +42,7 @@ if __name__ == '__main__':
     A2 = np.array([[f2,  0, c2[0]],
                     [0, f2, c2[1]],
                     [0,  0,    1]])
-    F_test = calc_Fmatrix_by5points(points8[:5, :], A1, A2)
+    F_test = calc_Fmatrix_by5points(points8, A1, A2)
     # 15点のエピポーラ線を描画
     draw_images(F_test, points8, pic_paths)
     # # 選択した8点からFを算出
@@ -81,7 +82,9 @@ if __name__ == '__main__':
     # calc_inside_param(F8, e1, f1, f2, ans_c_u2, ans_c_v2, calc_phase="c1")
     # # 画像2の中心座標(cu2, cv2)を算出
     # calc_inside_param(F8, e1, f1, f2, ans_c_u1, ans_c_v1, calc_phase="c2")
+
     #####################################################
+    
     #### カメラ行列A1, A2から作ってFを算出し、f1=2.3, f2=3.4が一致するかテスト ####
     # A1 = np.array([[2.3, 0, 0], [0, 2.3, 0], [0, 0, 1]])
     # A2 = np.array([[3.4, 0, 0], [0, 3.4, 0], [0, 0, 1]])
@@ -102,3 +105,4 @@ if __name__ == '__main__':
     # c_u1 = c_v1 = c_u2 = c_v2 = 0
     # # 内部パラメータを算出
     # calc_inside_param(F, e1, c_u1, c_v1, c_u2, c_v2, calc_phase="f")
+    
