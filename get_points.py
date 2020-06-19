@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from glob import glob
+
 class mouseParam:
     def __init__(self, input_img_name):
         self.mouseEvent = {"x":None, "y":None, "event":None, "flags":None}
@@ -33,18 +35,21 @@ class mouseParam:
         
 
 if __name__ == "__main__":
-    # 入力画像2枚のパス
-    paths = ["img/img1.JPG", "img/img3.JPG"]
-    coordinate_point = []
+    # 入力画像
+    paths = sorted(glob("movie/**.jpg"))
+    print(paths)
 
     for i, path in enumerate(paths):
+
+        coordinate_point = []
+
         # 入力画像
         img = cv2.imread(path)
         # 画像表示時に大きくなりすぎることがあったので1/2に縮小
-        orgHeight, orgWidth = img.shape[:2]
-        size = (int(orgWidth/2), int(orgHeight/2))
-        img = cv2.resize(img, size)
-        print(size)
+        # orgHeight, orgWidth = img.shape[:2]
+        # size = (int(orgWidth/2), int(orgHeight/2))
+        # img = cv2.resize(img, size)
+        # print(size)
 
         # Window名
         window_name = "input window"
@@ -62,22 +67,26 @@ if __name__ == "__main__":
                 coordinate_point.append(mouseData.getPos())
                 coordinate_point=list(dict.fromkeys(coordinate_point))
 
+                print(coordinate_point)
+
             # 右クリックがあったら終了
             elif mouseData.getEvent() == cv2.EVENT_RBUTTONDOWN:
                 break
 
         cv2.destroyAllWindows()
 
-        print(coordinate_point)
+        alter_point = []
+        for p in coordinate_point:
+            alter_point.append(list(p))
+        alter_point = np.array(alter_point)
 
-    # 対応点の数(画像1,2で同じ数であることが条件)
-    num = int(len(coordinate_point)/2)
-    print(num)
+        if i == 0:
+            uv_mat = alter_point[:, :]
 
-    # [[u1, v1, u2, v2], ...]の形にする
-    uvmat=[coordinate_point[idx]+coordinate_point[idx+num] for idx in range(num)]
-    uvmat = np.array(uvmat)
-    print(uvmat)
+        else:
+            uv_mat = np.concatenate([uv_mat, alter_point], axis=1)
+
+        print(uv_mat)
 
     # npy形式にして保存
-    np.save("img/uv_mat2", uvmat)
+    np.save("movie/uv_mat", uv_mat)

@@ -6,13 +6,8 @@ import seaborn
 
 if __name__ == '__main__':
     # getpoint.pyにより取り出した対応点を読み込み
-    uv_mat1 = np.load("img/uv_mat1.npy")
-    uv_mat2 = np.load("img/uv_mat2.npy")
-    x1 = uv_mat1[:, :2]
-    x2 = uv_mat1[:, 2:4]
-    x3 = uv_mat2[:, 2:4]
-
-    D = np.concatenate([x1, x2, x3], axis=1).T
+    uv_mat = np.load("movie/uv_mat.npy")
+    D = uv_mat.T
 
     print(D.shape)
 
@@ -34,9 +29,6 @@ if __name__ == '__main__':
 
     # プロット
     ax.plot(x,y,z,marker="o",linestyle='None',color="red")
-    # 同一平面上の点をプロット
-    ax.plot(x[[0,1,2,3,8,9,10,15,16,17,18,19,20,21,22]],y[[0,1,2,3,8,9,10,15,16,17,18,19,20,21,22]],z[[0,1,2,3,8,9,10,15,16,17,18,19,20,21,22]],
-            marker="o",linestyle='None',color="green")
 
     # 軸を等間隔にする処理
     max_range = np.array([x.max()-x.min(), y.max()-y.min(), z.max()-z.min()]).max() * 0.5
