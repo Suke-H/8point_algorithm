@@ -3,10 +3,12 @@ import numpy as np
 from PIL import Image
 
 def cut_movie(path):
+    """ 動画をフレームごとにわけて配列に格納する """
+
     # ビデオ読み込み
     cap = cv2.VideoCapture(path)
+
     pictures = []
-    print(path)
 
     while True:
         # 1フレーム分読み込み
@@ -27,8 +29,10 @@ def cut_movie(path):
     return pictures
 
 if __name__ == '__main__':
+
     # 動画を画像に分解
     pictures = cut_movie("movie/target.mp4")
+
     # 欲しいフレームを選択して保存
     pictures = pictures[[26, 40, 53, 67, 80]]
     for i, pic in enumerate(pictures):
